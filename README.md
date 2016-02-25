@@ -14,7 +14,9 @@ d = {'doThingX' : [True, False], 'doThingY' : False,
 
 Next create the option loop:
 
+```python
 oploop = optionloop(d)
+```
 
 Finally iterate and get your values:
 
