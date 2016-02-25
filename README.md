@@ -79,9 +79,11 @@ d['c'] = [1, 2, 3]
 oploop = optionloop(d)
 for state in oploop:
 	...
+```
 
 is equivalent to:
 
+```python
 for a in [False, True]:
 	for b in [False]:
 		for c in [1, 2, 3]:
