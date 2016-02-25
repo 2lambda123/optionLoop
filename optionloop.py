@@ -81,6 +81,7 @@ for a in [False, True]:
 """
 
 from collections import namedtuple
+from collections import defaultdict
 
 class optionloop(object):
 
@@ -126,7 +127,7 @@ class optionloop(object):
 
 
 
-    def __init__(self, initializing_dictionary):
+    def __init__(self, initializing_dictionary, default_dict_factory=None):
         """
         Initializes the optionloop.
 
@@ -134,6 +135,9 @@ class optionloop(object):
         The basis of the option loop.  
         The various options to iterate are the keys of the dictionary,
         while the value(s) associated with the key are iterated over
+
+        @param default_dict_factory :
+        if not None, default dicts will be returned using this factory
         """
 
         assert isinstance(initializing_dictionary, dict)
@@ -157,9 +161,14 @@ class optionloop(object):
             # the maximum index is the multiplicative sum
             # of the length of all interior arrays
             self.index_index *= size
+        self.default_dict_factory = default_dict_factory
+        self.use_dd = default_dict_factory is not None
 
     def __next__(self):
-        value_list = {}
+        if self.use_dd:
+            value_list = defaultdict(self.default_dict_factory)
+        else:
+            value_list = {}
         startlen = 1
         if self.index < self.index_index:
             for key, value in self.mydict.iteritems():
