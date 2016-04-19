@@ -9,5 +9,5 @@ setup(name='optionloop',
 		license='GPL',
 		packages=['optionloop'],
 		zip_safe=True,
-		test_suite='nose.collector'
+		test_suite='nose.collector',
 		tests_require=['nose'])
