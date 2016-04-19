@@ -14,6 +14,15 @@ class TestOptionLoop(unittest.TestCase):
             pass
         self.assertTrue(i is None)
 
+    def test_default_dict(self):
+        d = {'test' : [True]}
+        op = optionloop(d, lambda: False)
+        for i in op:
+            self.assertTrue(i['notakey'] == False)
+        op = optionloop(d, lambda: True)
+        for i in op:
+            self.assertTrue(i['notakey'] == True)  
+
     def test_string1(self):
         d = {'a' : 'a'}
         op = optionloop(d)
