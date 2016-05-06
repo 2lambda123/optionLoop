@@ -1,1 +1,1 @@
-from optionloop import optionloop
+from optionloop import OptionLoop

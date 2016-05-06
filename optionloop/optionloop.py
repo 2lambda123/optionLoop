@@ -7,7 +7,7 @@ that can be used to iterate over options in a single for-loop.
 
 No longer will you need a million nested for-loops...
 
-The optionloop works as follows:
+The OptionLoop works as follows:
 
 First, initialize a dictionary with various keys and values, e.g.:
 
@@ -16,7 +16,7 @@ d = {'doThingX' : [True, False], 'doThingY' : False,
 
 Next create the option loop:
 
-oploop = optionloop(d)
+oploop = OptionLoop(d)
 
 Finally iterate and get your values:
 
@@ -41,8 +41,8 @@ Also, option loops can be added to create even more complex looping structures, 
 d1 = {'lang' : ['c'], 'doThingX' : [True, False]}
 d2 = {'lang' : ['fortran'], 'doThingX' : [True, False], 'doThingY' : [True, False]}
 
-oploop1 = optionloop(d1)
-oploop2 = optionloop(d2)
+oploop1 = OptionLoop(d1)
+oploop2 = OptionLoop(d2)
 oploop = oploop1 + oploop2
 
 for state in oploop:
@@ -67,7 +67,7 @@ d = OrderedDict()
 d['a'] = [False, True]
 d['b'] = [False]
 d['c'] = [1, 2, 3]
-oploop = optionloop(d)
+oploop = OptionLoop(d)
 for state in oploop:
     ...
 
@@ -83,7 +83,7 @@ for a in [False, True]:
 from collections import namedtuple
 from collections import defaultdict
 
-class optionloop(object):
+class OptionLoop(object):
 
     class optionloopconcat(object):
         def __init__(self, oploop_list):
@@ -113,15 +113,15 @@ class optionloop(object):
         def __add__(self, other):
             if not self.check_all():
                 raise Exception('Cannot add to already started option loop!')
-            if isinstance(other, optionloop.optionloopconcat):
+            if isinstance(other, OptionLoop.optionloopconcat):
                 if not other.check_all():
                     raise Exception('Cannot add already started option loop!')
 
                 thelist = self.oplooplist[:]
                 thelist.extend(other.oplooplist)
-                return optionloop.optionloopconcat(thelist)
-            elif isinstance(other, optionloop):
-                return optionloop.optionloopconcat(self.oplooplist[:] + [other])
+                return OptionLoop.optionloopconcat(thelist)
+            elif isinstance(other, OptionLoop):
+                return OptionLoop.optionloopconcat(self.oplooplist[:] + [other])
 
         next = __next__ #python 2 compatiblity
 
@@ -129,7 +129,7 @@ class optionloop(object):
 
     def __init__(self, initializing_dictionary, default_dict_factory=None):
         """
-        Initializes the optionloop.
+        Initializes the OptionLoop.
 
         @param initializing_dictionary :
         The basis of the option loop.  
@@ -182,7 +182,7 @@ class optionloop(object):
         return value_list
 
     def __add__(self, other):
-        assert isinstance(other, optionloop) or isinstance(other, self.optionloopconcat), \
+        assert isinstance(other, OptionLoop) or isinstance(other, self.optionloopconcat), \
             "Adding object of type {} to option loop undefined".format(type(other))
 
         if isinstance(other, self.optionloopconcat):

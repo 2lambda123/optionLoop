@@ -1,14 +1,14 @@
 import unittest
-from optionloop import optionloop
+from optionloop import OptionLoop
 from collections import OrderedDict
 """
-Simple unit tests for optionloop, requires unittest
+Simple unit tests for OptionLoop, requires unittest
 """
 
 class TestOptionLoop(unittest.TestCase):
     def test_empty(self):
         d = {}
-        op = optionloop(d)
+        op = OptionLoop(d)
         i = None
         for i in op:
             pass
@@ -16,28 +16,28 @@ class TestOptionLoop(unittest.TestCase):
 
     def test_default_dict(self):
         d = {'test' : [True]}
-        op = optionloop(d, lambda: False)
+        op = OptionLoop(d, lambda: False)
         for i in op:
             self.assertTrue(i['notakey'] == False)
-        op = optionloop(d, lambda: True)
+        op = OptionLoop(d, lambda: True)
         for i in op:
             self.assertTrue(i['notakey'] == True)  
 
     def test_string1(self):
         d = {'a' : 'a'}
-        op = optionloop(d)
+        op = OptionLoop(d)
         for i in op:
             self.assertTrue(i['a'] == 'a')
 
     def test_string2(self):
         d = {'a' : 'abc'}
-        op = optionloop(d)
+        op = OptionLoop(d)
         for i in op:
             self.assertTrue(i['a'] == 'abc')
 
     def test_multiple_values1(self):
         d = {'a' : [False, True]}
-        op = optionloop(d)
+        op = OptionLoop(d)
         for i, state in enumerate(op):
             self.assertTrue(state['a'] == i)
 
@@ -45,7 +45,7 @@ class TestOptionLoop(unittest.TestCase):
         d = OrderedDict()
         d['a'] = [False, True]
         d['b'] = [False]
-        op = optionloop(d)
+        op = OptionLoop(d)
         for i, state in enumerate(op):
             self.assertTrue(state['a'] == i % 2)
             self.assertTrue(state['b'] == False)
@@ -55,7 +55,7 @@ class TestOptionLoop(unittest.TestCase):
         d['a'] = [False, True]
         d['b'] = [False]
         d['c'] = [1, 2, 3]
-        op = optionloop(d)
+        op = OptionLoop(d)
         for i, state in enumerate(op):
             self.assertTrue(state['a'] == i % 2)
             self.assertTrue(state['b'] == False)
@@ -63,15 +63,15 @@ class TestOptionLoop(unittest.TestCase):
 
     def test_no_len(self):
         d = {'a' : None}
-        op = optionloop(d)
+        op = OptionLoop(d)
         for i in op:
             self.assertTrue(i['a'] is None)
 
     def test_add_oploops(self):
         d = {'a' : [False, True]}
-        op1 = optionloop(d)
+        op1 = OptionLoop(d)
         d = {'a' : [1, 2]}
-        op2 = optionloop(d)
+        op2 = OptionLoop(d)
         op = op1 + op2
         for i, state in enumerate(op):
             if i < 2:
@@ -81,12 +81,12 @@ class TestOptionLoop(unittest.TestCase):
 
     def test_add_oploops2(self):
         d = {'a' : [False]}
-        op1 = optionloop(d)
+        op1 = OptionLoop(d)
         d = {'a' : [True]}
-        op2 = optionloop(d)
+        op2 = OptionLoop(d)
         op = op1 + op2
         d = {'a' : [1, 2]}
-        op3 = optionloop(d)
+        op3 = OptionLoop(d)
         op = op + op3
         for i, state in enumerate(op):
             if i < 2:
@@ -96,12 +96,12 @@ class TestOptionLoop(unittest.TestCase):
 
     def test_add_oploops2(self):
         d = {'a' : [False]}
-        op1 = optionloop(d)
+        op1 = OptionLoop(d)
         d = {'a' : [True]}
-        op2 = optionloop(d)
+        op2 = OptionLoop(d)
         op = op1 + op2
         d = {'a' : [1, 2]}
-        op3 = optionloop(d)
+        op3 = OptionLoop(d)
         op = op3 + op
         for i, state in enumerate(op):
             if i >= 2:
@@ -112,9 +112,9 @@ class TestOptionLoop(unittest.TestCase):
 
     def test_add_oploops_bad(self):
         d = {'a' : [False, True]}
-        op1 = optionloop(d)
+        op1 = OptionLoop(d)
         for i, state in enumerate(op1):
-            op2 = optionloop(d)
+            op2 = OptionLoop(d)
             try:
                 op = op1 + op2
                 self.assertTrue(False)
