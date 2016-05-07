@@ -59,7 +59,7 @@ class TestOptionLoop(unittest.TestCase):
         for i, state in enumerate(op):
             self.assertTrue(state['a'] == i % 2)
             self.assertTrue(state['b'] == False)
-            self.assertTrue(state['c'] == (i / 2) + 1)
+            self.assertTrue(state['c'] == int(i / 2) + 1)
 
     def test_no_len(self):
         d = {'a' : None}

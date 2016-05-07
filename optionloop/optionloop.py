@@ -170,9 +170,9 @@ class OptionLoop(object):
         else:
             value_list = {}
         startlen = 1
-        if self.index < self.index_index:
+        if self.index_index is not None and self.index < self.index_index:
             for key, value in self.mydict.items():
-                value_list[key] = value[(self.index / startlen) % len(value)]
+                value_list[key] = value[int((self.index / startlen) % len(value))]
                 startlen *= len(value)
 
             self.index += 1
