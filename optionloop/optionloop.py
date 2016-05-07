@@ -145,7 +145,7 @@ class OptionLoop(object):
         self.mydict = initializing_dictionary
         self.index = 0
         self.index_index = None
-        for key, value in self.mydict.iteritems():
+        for key, value in self.mydict.items():
             if isinstance(value, (str, bytes)):
                 self.mydict[key] = [value]
                 size = 1
@@ -171,7 +171,7 @@ class OptionLoop(object):
             value_list = {}
         startlen = 1
         if self.index < self.index_index:
-            for key, value in self.mydict.iteritems():
+            for key, value in self.mydict.items():
                 value_list[key] = value[(self.index / startlen) % len(value)]
                 startlen *= len(value)
 
