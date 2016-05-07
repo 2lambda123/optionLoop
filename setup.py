@@ -8,7 +8,7 @@ except ImportError:
     read_md = lambda f: open(f, 'r').read()
 
 setup(name='optionloop',
-		version='1.0.2',
+		version='1.0.3',
 		description='Allows collapsing of nested for loops via '
 		'dictionary iteration',
 		url='https://github.com/arghdos/optionLoop',
