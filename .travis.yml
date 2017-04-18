@@ -69,13 +69,13 @@ before_deploy:
   - conda install pandoc
   - pip install pypandoc
 
-# deploy:
-#   provider: pypi
-#   user: kyleniemeyer
-#   password:
-#     secure: "vaCCwVyZ8m+PDWub0kpPWYwwAUrtgnFQxU9qKc6VwIp3cCtYyEAZjTbAUzBfc/DsqmpCoLI62hYrQWqq0PwFfs4/1Ho+ppJuuiPvcIs0Syh8iv37YKnQG5Yjc9OjEGOY3ZScIUz57X67dst8HBiNHZnovwh5yxoGCTYrP0HdPlQbMkU6byzpXJ/+gzZaRiXXCPElEMf7HRuOZCkoDUIxypcBAvRHjyqI5TLecfkZBllkA3MFfEMT2mDurU4fmSsS7ndcKONaW9OKWSpSEItGle1Yq68qLN3xJIDSVfWg+vAUANuNAZJwo3CyfwPdxfWq4zth9+fY56ZJg3rz2QhC4kVJIOyNfyHyLdKXCQpCg2A0zcTMItnHafKm8eN2IPKNkO+HN1mpE6+G0UTnGfQtsA3FWQvedvA/WH5f226JJ1RNlJAsMDpf08WK7tTtc4rQ0Rm9TtKiblcZ+AxQMyZCdO3UxKCzqpusZmueIbr4koPFczaQYDsldWihboWp6ToAymI1XwcsSQTQTTcqGqt5ADuI9Ae0egWqpsAe72aiTYUR/FrIXD2ylSQl0E3UobjkYl+5kT4pJtF3TknJqN4VZDAbRP1IxPGcpNXLuZXekLpNaaDxJFepAnytWtIGd/W2vt+Afv5vt5VvGLFS56uuxOkLlIFebw0NfXnT1citLLM="
-#   on:
-#     tags: true
-#     condition: $TRAVIS_OS_NAME == "linux" && $PYTHON == "3.6"
-#   distributions: "sdist bdist_wheel"
-#   skip_upload_docs: true
+deploy:
+  provider: pypi
+  user: kyleniemeyer
+  password:
+    secure: "lyvc669aRaXUTVKSn494yxtjNGUFr3enqmE36EqFVIOwFhRy3WWf6SSBouarxtkIF5fHEqdgcxGbulBa4Cwq+cCbXcIX+vlNgJ3cbDziubG7pIInYn3VD4mpdh4HfL/H7a5cTeNK4y1jiGPHq32wIkgMBLeCdEcNfnKTvIHdFIU2cdjYzexsPqGZaS9rRqpAePrEoxes7tgxxF2xThcBUJy/oewr61NHw+NRoHHJVwLepil6BfMF/l4M3aim8vkagqSeVuBOyq9CLFj7Xl6c/TRjsPYh8OCGqZfDku9c0Q/Mny2clrfTU5PqA62Y7pJgHh1SHODrmNCuRXOtTiBbKgv1weCATwfTUljW9cFqzcg4vJzbBzqTAgNjtMbgO3rlc93OioM82FlbdyMMIU3xKy0LTqVP09r3oBpE4GHF75iisErcMYbDapUeXzV8w2XHVgvs5Gvg817wTGeSOwjeMbB59sQ7NId5GpedsGLfL50w3GTmtc+iMfn51LR4M6D4ximzVjo9K487+QBQpLGvvEJwUPr5x6ZjdUthOOpAXu/gM/LhSdFeaYVpwbDlOr9n62rznjOA87cBt2TsJVZAJOqMzuCH/ccIsNoIuP4W5EglEpSj2dYvQVa5467Hze8fsh3f3GBHNTDQL0/IVMs0q9Uq8Vnnb7T1jWUVN6poVYQ="
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME == "linux" && $PYTHON == "3.6"
+  distributions: "sdist bdist_wheel"
+  skip_upload_docs: true
