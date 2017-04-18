@@ -34,7 +34,7 @@ setup(
     author='arghdos',
     author_email='arghdos@gmail.com',
     license='GPL',
-    packages=['optionloop'],
+    packages=['optionloop', 'optionloop.tests'],
     zip_safe=True,
     test_suite='nose.collector',
     tests_require=tests_require,
