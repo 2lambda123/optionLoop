@@ -1,0 +1,40 @@
+{% set data = load_setup_py_data() %}
+
+package:
+  name: optionloop
+  version: {{ data['version'] }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python >=2.7,<3|>=3.5,{{PY_VER}}*
+    - setuptools
+
+  run:
+    - python {{PY_VER}}*
+
+test:
+  imports:
+    - optionloop
+
+  requires:
+    - nose
+
+  commands:
+    - nosetests optionloop.tests
+
+about:
+  home: data['url']
+  license: GPLv3
+  license_file: LICENSE
+  license_family: GPL
+
+  summary: data['description']
+  description: data['long_description']
+  dev_url: data['url']

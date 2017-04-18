@@ -1,0 +1,91 @@
+sudo: false
+env:
+  global:
+    # Anaconda token
+    - secure: "US94SbyTKd1exnoQJnfuu6diMh673ek3N1flz7VRsKBywjVTImTjpSYNllmR6AEUtT1OiyVSMEWd90yjJ/DejNmcNnHXE8hbCHsWY196U66wXLJjeVgspW0QC5xPRryPDw8Mn0o735v4shAmMxuQ8CoYe/Hx40e7OfwiaSheDEKAFOyDnGPeJYNc+T0jnB31USSu36AHBwRYgRIOcNpQCY3nnG+Gn2w2zTeUXUmKgSw+LYQXISPyyJRIL695Lw6jjNoW0U3LcsTenLb1bK64M4CwTLR42hxtB0dOiyYgUVwVSsUGXZR6pqH1lKoR8b9ANuUF4HwQN35nJdlccd1g91FKU3s15KmsGIVdsBbwD+iPPZKGi2EwwRx1iR5dNCaiXga+3uyZcpKq31zoD6R5fzSi/igLqEVsyxYoJtBhPiuZKcNnqv0hiFqx8ETO173qJNj1lAJUYz2ChDsoHz2ffzX+EncHBFq38VvtkmYUOPJ7Zg7PDbImNYEjaTXzUe9sWjMO2zgitL3RYJIXCaKs/+RqCuLgLALbHrBBI8UXNiAWnW4npDQQU8zV/x35isBQk6OXkxu0BW9atr6d590uIpD/M7uOxogICaOtszXYAvteIyuasZu/Qs1RcYtDpZizQKd+zQx7a7e7L+iYz05z6ySnQEwVT3qJk9bRuaWU+rY="
+
+language: generic
+
+matrix:
+  include:
+    - os: linux
+      env: PYTHON="2.7"
+
+    - os: linux
+      env: PYTHON="3.5"
+
+    - os: linux
+      env: PYTHON="3.6"
+
+    - os: osx
+      env: PYTHON="2.7"
+
+    - os: osx
+      env: PYTHON="3.5"
+
+    - os: osx
+      env: PYTHON="3.6"
+
+install:
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+      elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+        rvm get stable;
+      fi
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - export PATH="$HOME/miniconda/bin:$PATH"
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda
+    - conda config --append channels conda-forge
+    - if [[ -z "$TRAVIS_TAG" ]]; then
+        sed -i -e "s/\${PYTHON}/"${PYTHON}"/" test-environment.yaml;
+        conda env create -qf test-environment.yaml;
+        source activate test-environment;
+      else
+        conda install -q conda-build anaconda-client;
+      fi
+      # Useful for debugging any issues with conda
+    - conda info -a
+    - conda list
+
+# command to run tests
+script:
+  - set -e
+  - if [[ -z "$TRAVIS_TAG" ]]; then
+      python setup.py test;
+      if [[ "$PYTHON" == "3.6" && "$TRAVIS_OS_NAME" == "linux" ]]; then
+        git checkout -- test-environment.yaml;
+        #conda install -q sphinx doctr;
+        python setup.py install;
+        #cd docs;
+        #make html SPHINXOPTS="-W";
+        #cd ..;
+        #doctr deploy .;
+      fi
+    else
+      conda build conda.recipe --python=${PYTHON};
+      anaconda -t $ANACONDA_TOKEN upload $HOME/miniconda/conda-bld/*/optionloop*.tar.bz2;
+    fi
+  - set +e
+
+#after_success:
+#  - if [[ -z "$TRAVIS_TAG" ]]; then
+#      bash <(curl -s https://codecov.io/bash);
+#    fi
+
+before_deploy:
+  - conda install pandoc
+  - pip install pypandoc
+
+# deploy:
+#   provider: pypi
+#   user: kyleniemeyer
+#   password:
+#     secure: "vaCCwVyZ8m+PDWub0kpPWYwwAUrtgnFQxU9qKc6VwIp3cCtYyEAZjTbAUzBfc/DsqmpCoLI62hYrQWqq0PwFfs4/1Ho+ppJuuiPvcIs0Syh8iv37YKnQG5Yjc9OjEGOY3ZScIUz57X67dst8HBiNHZnovwh5yxoGCTYrP0HdPlQbMkU6byzpXJ/+gzZaRiXXCPElEMf7HRuOZCkoDUIxypcBAvRHjyqI5TLecfkZBllkA3MFfEMT2mDurU4fmSsS7ndcKONaW9OKWSpSEItGle1Yq68qLN3xJIDSVfWg+vAUANuNAZJwo3CyfwPdxfWq4zth9+fY56ZJg3rz2QhC4kVJIOyNfyHyLdKXCQpCg2A0zcTMItnHafKm8eN2IPKNkO+HN1mpE6+G0UTnGfQtsA3FWQvedvA/WH5f226JJ1RNlJAsMDpf08WK7tTtc4rQ0Rm9TtKiblcZ+AxQMyZCdO3UxKCzqpusZmueIbr4koPFczaQYDsldWihboWp6ToAymI1XwcsSQTQTTcqGqt5ADuI9Ae0egWqpsAe72aiTYUR/FrIXD2ylSQl0E3UobjkYl+5kT4pJtF3TknJqN4VZDAbRP1IxPGcpNXLuZXekLpNaaDxJFepAnytWtIGd/W2vt+Afv5vt5VvGLFS56uuxOkLlIFebw0NfXnT1citLLM="
+#   on:
+#     tags: true
+#     condition: $TRAVIS_OS_NAME == "linux" && $PYTHON == "3.6"
+#   distributions: "sdist bdist_wheel"
+#   skip_upload_docs: true

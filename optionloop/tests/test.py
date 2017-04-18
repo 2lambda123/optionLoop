@@ -1,9 +1,10 @@
-import unittest
-from optionloop import OptionLoop
-from collections import OrderedDict
 """
 Simple unit tests for OptionLoop, requires unittest
 """
+import unittest
+from collections import OrderedDict
+
+from ..optionloop import OptionLoop
 
 class TestOptionLoop(unittest.TestCase):
     def test_empty(self):
@@ -21,7 +22,7 @@ class TestOptionLoop(unittest.TestCase):
             self.assertTrue(i['notakey'] == False)
         op = OptionLoop(d, lambda: True)
         for i in op:
-            self.assertTrue(i['notakey'] == True)  
+            self.assertTrue(i['notakey'] == True)
 
     def test_string1(self):
         d = {'a' : 'a'}
