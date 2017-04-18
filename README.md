@@ -1,4 +1,7 @@
 # optionLoop
+
+[![Anaconda-Server Badge](https://anaconda.org/slackha/optionloop/badges/version.svg)](https://anaconda.org/slackha/optionloop)
+
 Simple loop structure to iterate over all combinations of an initializing dictionary
 
 No longer will you need a million nested for-loops...
