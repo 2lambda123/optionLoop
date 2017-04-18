@@ -17,14 +17,14 @@ matrix:
     - os: linux
       env: PYTHON="3.6"
 
-    - os: osx
-      env: PYTHON="2.7"
-
-    - os: osx
-      env: PYTHON="3.5"
-
-    - os: osx
-      env: PYTHON="3.6"
+    # - os: osx
+    #   env: PYTHON="2.7"
+    #
+    # - os: osx
+    #   env: PYTHON="3.5"
+    #
+    # - os: osx
+    #   env: PYTHON="3.6"
 
 install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -57,23 +57,13 @@ script:
       python setup.py test;
       if [[ "$PYTHON" == "3.6" && "$TRAVIS_OS_NAME" == "linux" ]]; then
         git checkout -- test-environment.yaml;
-        #conda install -q sphinx doctr;
         python setup.py install;
-        #cd docs;
-        #make html SPHINXOPTS="-W";
-        #cd ..;
-        #doctr deploy .;
       fi
     else
       conda build conda.recipe --python=${PYTHON};
       anaconda -t $ANACONDA_TOKEN upload $HOME/miniconda/conda-bld/*/optionloop*.tar.bz2;
     fi
   - set +e
-
-#after_success:
-#  - if [[ -z "$TRAVIS_TAG" ]]; then
-#      bash <(curl -s https://codecov.io/bash);
-#    fi
 
 before_deploy:
   - conda install pandoc
