@@ -81,6 +81,7 @@ for a in [False, True]:
 """
 
 from collections import defaultdict
+import six
 
 
 class OptionLoop(object):
@@ -149,7 +150,7 @@ class OptionLoop(object):
         self.mydict = initializing_dictionary.copy()
         self.index = 0
         self.end_index = None
-        for key, value in self.mydict.iteritems():
+        for key, value in six.iteritems(self.mydict):
             if isinstance(value, (str, bytes)):
                 self.mydict[key] = [value]
                 size = 1
@@ -178,9 +179,9 @@ class OptionLoop(object):
         else:
             value_list = {}
         startlen = 1
-        if self.index < self.end_index:
-            for key, value in self.mydict.iteritems():
-                value_list[key] = value[(self.index / startlen) % len(value)]
+        if self.end_index is not None and self.index < self.end_index:
+            for key, value in six.iteritems(self.mydict):
+                value_list[key] = value[int(self.index / startlen) % len(value)]
                 startlen *= len(value)
 
             self.index += 1

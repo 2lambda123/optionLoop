@@ -21,6 +21,10 @@ except (ImportError, OSError, IOError):
     print('Warning: pypandoc module not found, could not convert Markdown to RST')
     long_description = desc
 
+install_requires = [
+    'six'
+]
+
 tests_require = [
     'nose',
 ]
@@ -37,6 +41,7 @@ setup(
     packages=['optionloop', 'optionloop.tests'],
     zip_safe=True,
     test_suite='nose.collector',
+    install_requires=install_requires,
     tests_require=tests_require,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
