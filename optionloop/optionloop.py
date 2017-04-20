@@ -80,12 +80,12 @@ for a in [False, True]:
 
 """
 
-from collections import namedtuple
 from collections import defaultdict
 
-class OptionLoop(object):
 
+class OptionLoop(object):
     class optionloopconcat(object):
+
         def __init__(self, oploop_list):
             self.oplooplist = oploop_list
             self.master_index = 0
@@ -95,7 +95,7 @@ class OptionLoop(object):
             Checks to see that all option loops are unstarted
             """
             return all(oploop.index == 0 for oploop in self.oplooplist) \
-                    and self.master_index == 0
+                and self.master_index == 0
 
         def __next__(self):
             if self.master_index < len(self.oplooplist):
@@ -106,6 +106,12 @@ class OptionLoop(object):
                     return self.__next__()
             else:
                 raise StopIteration()
+
+        def copy(self):
+            newlist = []
+            for oploop in self.oplooplist:
+                newlist.append(oploop.copy())
+            return OptionLoop.optionloopconcat(newlist)
 
         def __iter__(self):
             return self
@@ -123,16 +129,14 @@ class OptionLoop(object):
             elif isinstance(other, OptionLoop):
                 return OptionLoop.optionloopconcat(self.oplooplist[:] + [other])
 
-        next = __next__ #python 2 compatiblity
-
-
+        next = __next__  # python 2 compatiblity
 
     def __init__(self, initializing_dictionary, default_dict_factory=None):
         """
         Initializes the OptionLoop.
 
         @param initializing_dictionary :
-        The basis of the option loop.  
+        The basis of the option loop.
         The various options to iterate are the keys of the dictionary,
         while the value(s) associated with the key are iterated over
 
@@ -142,10 +146,10 @@ class OptionLoop(object):
 
         assert isinstance(initializing_dictionary, dict)
 
-        self.mydict = initializing_dictionary
+        self.mydict = initializing_dictionary.copy()
         self.index = 0
-        self.index_index = None
-        for key, value in self.mydict.items():
+        self.end_index = None
+        for key, value in self.mydict.iteritems():
             if isinstance(value, (str, bytes)):
                 self.mydict[key] = [value]
                 size = 1
@@ -155,14 +159,18 @@ class OptionLoop(object):
                 except TypeError:
                     self.mydict[key] = [value]
                     size = len([value])
-                
-            if self.index_index is None:
-                self.index_index = 1
+
+            if self.end_index is None:
+                self.end_index = 1
             # the maximum index is the multiplicative sum
             # of the length of all interior arrays
-            self.index_index *= size
+            self.end_index *= size
         self.default_dict_factory = default_dict_factory
         self.use_dd = default_dict_factory is not None
+
+    def copy(self):
+        return OptionLoop(self.mydict,
+                          self.default_dict_factory)
 
     def __next__(self):
         if self.use_dd:
@@ -170,33 +178,35 @@ class OptionLoop(object):
         else:
             value_list = {}
         startlen = 1
-        if self.index_index is not None and self.index < self.index_index:
-            for key, value in self.mydict.items():
-                value_list[key] = value[int((self.index / startlen) % len(value))]
+        if self.index < self.end_index:
+            for key, value in self.mydict.iteritems():
+                value_list[key] = value[(self.index / startlen) % len(value)]
                 startlen *= len(value)
 
             self.index += 1
         else:
-            raise StopIteration() 
+            raise StopIteration()
 
         return value_list
 
     def __add__(self, other):
         assert isinstance(other, OptionLoop) or isinstance(other, self.optionloopconcat), \
-            "Adding object of type {} to option loop undefined".format(type(other))
+            "Adding object of type {} to option loop undefined".format(
+                type(other))
 
         if isinstance(other, self.optionloopconcat):
             if self.index > 0 or not other.check_all():
-                raise Exception('Cannot add option loops once iteration has begun...')
+                raise Exception(
+                    'Cannot add option loops once iteration has begun...')
             return self.optionloopconcat([self] + other.oplooplist)
 
         if self.index > 0 or other.index > 0:
-            raise Exception('Cannot add option loops once iteration has begun...')
+            raise Exception(
+                'Cannot add option loops once iteration has begun...')
 
         return self.optionloopconcat([self, other])
 
     def __iter__(self):
         return self
 
-    next = __next__ #python 2 compatiblity
-
+    next = __next__  # python 2 compatiblity
