@@ -149,7 +149,7 @@ class OptionLoop(object):
         self.mydict = initializing_dictionary.copy()
         self.index = 0
         self.end_index = None
-        for key, value in self.mydict.iteritems():
+        for key, value in self.mydict.items():
             if isinstance(value, (str, bytes)):
                 self.mydict[key] = [value]
                 size = 1
