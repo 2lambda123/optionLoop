@@ -94,3 +94,15 @@ for a in [False, True]:
 		for c in [1, 2, 3]:
 			....
 ```
+
+Additionally, an option loop (or combination thereof) can be reset using the copy
+interface:
+
+```python
+d1 = {'lang' : ['c'], 'doThingX' : [True, False]}
+oploop1 = optionloop(d1)
+
+# iterate through 1
+
+oploop2 = oploop1.copy()
+```
