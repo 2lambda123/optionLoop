@@ -181,7 +181,7 @@ class OptionLoop(object):
         startlen = 1
         if self.index < self.end_index:
             for key, value in six.iteritems(self.mydict):
-                value_list[key] = value[(self.index / startlen) % len(value)]
+                value_list[key] = value[int(self.index / startlen) % len(value)]
                 startlen *= len(value)
 
             self.index += 1
