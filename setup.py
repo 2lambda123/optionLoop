@@ -8,7 +8,7 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'optionloop', '_version.py')) as version_file:
     exec(version_file.read())
 
-with open(path.join(here, 'README.md')) as readme_file:
+with open(path.join(here, 'README.md'), 'rt') as readme_file:
     readme = readme_file.read()
 
 desc = readme
